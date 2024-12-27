@@ -4,19 +4,24 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 const express = require("express");
-const session = require("express-session");
-
 const bcrypt = require("bcryptjs");
 
+// Import passport and session from config
 const passport = require("./config/passport");
+const session = require("./config/session");
 
 const app = express();
-// Set views path and view engine
+
+// Set views and view engine
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
-app.use(session({ secret: "cats", resave: false, saveUninitialized: false }));
+// Use session and passport middleware.
+app.use(session);
 app.use(passport.session());
+
+// Middleware to parse request body.
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Custom middleware that simplifies access to the currentUser in views.
@@ -28,11 +33,9 @@ app.use((req, res, next) => {
 
 // Routes
 app.get("/", (req, res) => {
-  // consSole.log(req.user);
-  // res.render("index", { user: req.user }); // sending user object (if it came along with req object cookies) to view
-  // Above line is commented out because of the above custom middleware.
   res.render("index");
 });
+
 app.get("/sign-up", (req, res) => res.render("sign-up-form"));
 
 app.post("/sign-up", async (req, res, next) => {
