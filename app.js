@@ -74,6 +74,14 @@ app.get("/log-out", (req, res) => {
   });
 });
 
+app.get("/upload-file", (req, res) => {
+  if (req.isAuthenticated()) {
+    res.render("upload-file-form");
+  } else {
+    res.render("sign-up-form");
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => console.log(`App is listening on port: ${PORT}`));
