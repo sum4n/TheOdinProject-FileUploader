@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>File Uploader</title>
+  </head>
+  <body>
+    <% if (locals.currentUser) {%>
+    <h1>Welcome back <%= currentUser.username %></h1>
+    <a href="/log-out">LOG OUT</a>
+    <% } else { %>
+    <h1>Welcome to The Odin Project - File Uploader!</h1>
+    <h2>Please log in</h2>
+    <form action="/log-in" method="POST">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" placeholder="username" />
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" />
+      <button>Log In</button>
+    </form>
+
+    <p>New user? <a href="/sign-up">Sign up</a></p>
+
+    <% } %>
+  </body>
+</html>
