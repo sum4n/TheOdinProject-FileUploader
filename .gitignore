@@ -131,3 +131,6 @@ dist
 
 # vscode config
 .vscode/
+
+# Uploaded folder and files
+uploads/
