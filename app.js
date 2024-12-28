@@ -10,6 +10,9 @@ const bcrypt = require("bcryptjs");
 const passport = require("./config/passport");
 const session = require("./config/session");
 
+// Multer
+const upload = require("./config/multer");
+
 const app = express();
 
 // Set views and view engine
@@ -80,6 +83,10 @@ app.get("/upload-file", (req, res) => {
   } else {
     res.render("sign-up-form");
   }
+});
+
+app.post("/upload-file", upload.single("uploaded-file"), (req, res, next) => {
+  res.send("File saved successfully");
 });
 
 const PORT = process.env.PORT || 3000;
