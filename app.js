@@ -52,6 +52,9 @@ app.post("/sign-up", async (req, res, next) => {
         username: req.body.username,
         password: hashedPassword,
         email: req.body.email,
+        directories: {
+          create: { name: `${req.body.username}'s Drive` },
+        },
       },
     });
     res.redirect("/");
