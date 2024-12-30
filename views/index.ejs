@@ -7,9 +7,29 @@
   </head>
   <body>
     <% if (locals.currentUser) {%>
-    <h1>Welcome back <%= currentUser.username %></h1>
-    <a href="/upload-file">Upload a file</a>
-    <a href="/log-out">LOG OUT</a>
+    <h1><%= currentUser.username %></h1>
+    <p>
+      Files: <% locals.directory.files.forEach((file) => { %> <%= file.name %>
+      <% }) %>
+    </p>
+
+    <p>Directory: <%= locals.directory.name %></p>
+    <!-- <a href="/upload-file">Upload a file</a> -->
+    <form
+      action="/upload-file/<%= locals.directory.name %>"
+      method="POST"
+      enctype="multipart/form-data"
+    >
+      <input type="file" name="uploaded-file" id="uploaded-file" />
+
+      <button>Upload</button>
+    </form>
+    <% if (locals.message) {%>
+    <p><%= locals.message %></p>
+    <% } %>
+    <div>
+      <a href="/log-out">LOG OUT</a>
+    </div>
     <% } else { %>
     <h1>Welcome to The Odin Project - File Uploader!</h1>
     <h2>Please log in</h2>
