@@ -49,6 +49,7 @@ model File {
   name        String
   size        String
   type        String
+  path        String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   directory   Directory @relation(fields: [directoryId], references: [id])
