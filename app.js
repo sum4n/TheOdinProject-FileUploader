@@ -29,14 +29,40 @@ app.use(express.urlencoded({ extended: false }));
 
 // Custom middleware that simplifies access to the currentUser in views.
 // This enables access to the currentUser variable in all views without manually passing it in controllers.
-app.use((req, res, next) => {
-  res.locals.currentUser = req.user;
-  next();
-});
+// app.use((req, res, next) => {
+//   res.locals.currentUser = req.user;
+//   // console.log(req.user);
+//   next();
+// });
 
 // Routes
-app.get("/", (req, res) => {
-  res.render("index");
+app.get("/", async (req, res) => {
+  if (req.isAuthenticated()) {
+    const user = await prisma.user.findUnique({
+      where: {
+        username: req.user.username,
+      },
+    });
+    // console.log(user);
+
+    const directory = await prisma.directory.findFirst({
+      where: {
+        ownerId: req.user.id,
+        parentDirectoryId: null,
+      },
+      include: {
+        files: true,
+      },
+    });
+    // console.log(directory);
+
+    res.render("index", {
+      currentUser: user,
+      directory: directory,
+    });
+  } else {
+    res.render("index");
+  }
 });
 
 app.get("/sign-up", (req, res) => res.render("sign-up-form"));
