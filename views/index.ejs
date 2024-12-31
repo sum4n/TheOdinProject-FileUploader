@@ -9,7 +9,7 @@
     <% if (locals.currentUser) {%>
     <h1><%= currentUser.username %></h1>
     <h2>
-      <a href="<%= locals.directory.name %>"><%= locals.directory.name %></a>
+      <a href="<%= locals.directory.id %>"><%= locals.directory.name %></a>
     </h2>
     <p>
       Files: <% locals.directory.files.forEach((file) => { %>
@@ -18,7 +18,7 @@
 
     <p>
       Directories: <% locals.directory.subDirectories.forEach((dir) => { %>
-      <a href="<%= dir.name %>"><%= dir.name %></a> <% }) %>
+      <a href="<%= dir.id %>"><%= dir.name %></a> <% }) %>
     </p>
     <!-- <a href="/upload-file">Upload a file</a> -->
     <div>
