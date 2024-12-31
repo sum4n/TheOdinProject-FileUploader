@@ -21,15 +21,17 @@
       <a href="<%= dir.name %>"><%= dir.name %></a> <% }) %>
     </p>
     <!-- <a href="/upload-file">Upload a file</a> -->
-    <form
-      action="/upload-file/<%= locals.directory.name %>"
-      method="POST"
-      enctype="multipart/form-data"
-    >
-      <input type="file" name="uploaded-file" id="uploaded-file" />
+    <div>
+      <form
+        action="/upload-file/<%= locals.directory.id %>"
+        method="POST"
+        enctype="multipart/form-data"
+      >
+        <input type="file" name="uploaded-file" id="uploaded-file" />
 
-      <button>Upload</button>
-    </form>
+        <button>Upload</button>
+      </form>
+    </div>
     <% if (locals.message) {%>
     <p><%= locals.message %></p>
     <% } %>
