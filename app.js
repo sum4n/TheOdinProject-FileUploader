@@ -52,6 +52,7 @@ app.get("/", async (req, res) => {
       },
       include: {
         files: true,
+        subDirectories: true,
       },
     });
     // console.log(directory);
@@ -114,9 +115,32 @@ app.get("/upload-file", (req, res) => {
   }
 });
 
-app.post("/upload-file", upload.single("uploaded-file"), (req, res, next) => {
-  res.send("File saved successfully");
-});
+app.post(
+  "/upload-file/:directoryName",
+  upload.single("uploaded-file"),
+  async (req, res, next) => {
+    // res.send("File saved successfully");
+    // console.table(req.file);
+    // console.log(req.params);
+    const currentDir = await prisma.directory.findFirst({
+      where: {
+        name: req.params.directoryName,
+      },
+    });
+    // console.log(currentDir);
+    await prisma.file.create({
+      data: {
+        name: req.file.originalname,
+        size: req.file.size.toString(),
+        type: req.file.mimetype,
+        path: "./uploads/" + req.file.originalname,
+        directoryId: currentDir.id,
+        ownerId: req.user.id,
+      },
+    });
+    res.redirect("/");
+  }
+);
 
 const PORT = process.env.PORT || 3000;
 
