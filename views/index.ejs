@@ -32,6 +32,15 @@
         <button>Upload</button>
       </form>
     </div>
+
+    <div>
+      <form action="/create-folder/<%= locals.directory.id %>" method="POST">
+        <label for="newFolder">New folder:</label>
+        <input type="text" name="newFolder" id="newFolder" required />
+        <button>Create</button>
+      </form>
+    </div>
+
     <% if (locals.message) {%>
     <p><%= locals.message %></p>
     <% } %>
