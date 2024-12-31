@@ -136,6 +136,19 @@ app.post(
   }
 );
 
+// Create folder
+app.post("/create-folder/:parentDirectoryId", async (req, res) => {
+  await prisma.directory.create({
+    data: {
+      name: req.body.newFolder,
+      ownerId: req.user.id,
+      parentDirectoryId: parseInt(req.params.parentDirectoryId),
+    },
+  });
+
+  res.redirect("/");
+});
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => console.log(`App is listening on port: ${PORT}`));
