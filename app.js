@@ -149,6 +149,37 @@ app.post("/create-folder/:parentDirectoryId", async (req, res) => {
   res.redirect("/");
 });
 
+// Get folder
+app.get("/:directoryId", async (req, res) => {
+  if (req.isAuthenticated()) {
+    const user = await prisma.user.findUnique({
+      where: {
+        username: req.user.username,
+      },
+    });
+    // console.log(user);
+
+    const directory = await prisma.directory.findUnique({
+      where: {
+        ownerId: req.user.id,
+        id: parseInt(req.params.directoryId),
+      },
+      include: {
+        files: true,
+        subDirectories: true,
+        parentDirectory: true,
+      },
+    });
+
+    res.render("index", {
+      currentUser: user,
+      directory: directory,
+    });
+  } else {
+    res.render("index");
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => console.log(`App is listening on port: ${PORT}`));
