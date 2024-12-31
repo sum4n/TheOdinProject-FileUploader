@@ -116,25 +116,19 @@ app.get("/upload-file", (req, res) => {
 });
 
 app.post(
-  "/upload-file/:directoryName",
+  "/upload-file/:directoryId",
   upload.single("uploaded-file"),
   async (req, res, next) => {
-    // res.send("File saved successfully");
     // console.table(req.file);
     // console.log(req.params);
-    const currentDir = await prisma.directory.findFirst({
-      where: {
-        name: req.params.directoryName,
-      },
-    });
-    // console.log(currentDir);
+
     await prisma.file.create({
       data: {
         name: req.file.originalname,
         size: req.file.size.toString(),
         type: req.file.mimetype,
         path: "./uploads/" + req.file.originalname,
-        directoryId: currentDir.id,
+        directoryId: parseInt(req.params.directoryId),
         ownerId: req.user.id,
       },
     });
