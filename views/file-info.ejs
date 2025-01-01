@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>File Information</title>
+  </head>
+  <body>
+    <% if (locals.file) {%>
+    <p>Name: <%= file.name %></p>
+    <p>Type: <%=file.type %></p>
+    <p>Size: <%= file.size %></p>
+    <p>Path: <%= file.path %></p>
+    <p>Create: <%= file.createdAt %></p>
+
+    <!-- File operations -->
+    <form action="/<%= file.directoryId %>" method="GET">
+      <button>Back</button>
+    </form>
+    <% } else { %>
+    <p>No file found.</p>
+    <!-- Go to root directory on invalid file id -->
+    <form action="/" method="get">
+      <button>Back</button>
+    </form>
+    <% } %>
+  </body>
+</html>
