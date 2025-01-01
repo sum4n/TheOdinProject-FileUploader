@@ -60,6 +60,7 @@ app.get("/", async (req, res) => {
     res.render("index", {
       currentUser: user,
       directory: directory,
+      parents: [], // Because the view get the parents object from another router.
     });
   } else {
     res.render("index");
@@ -170,10 +171,35 @@ app.get("/:directoryId", async (req, res) => {
         parentDirectory: true,
       },
     });
+    // console.log({ directory });
+
+    // Send parents' list of the directory to the view to render
+    // link bread crumbs.
+    let parents = [];
+    let tempDir = directory;
+
+    while (tempDir.parentDirectory !== null) {
+      parents.push(tempDir.parentDirectory);
+      // console.log("---in while-------");
+      // console.log({ parents });
+      tempDir = await prisma.directory.findUnique({
+        where: {
+          id: parseInt(tempDir.parentDirectoryId),
+        },
+        include: {
+          parentDirectory: true,
+        },
+      });
+      // console.log("---in while-------");
+      // console.log({ tempDir });
+    }
+    // console.log("----------");
+    // console.log(parents);
 
     res.render("index", {
       currentUser: user,
       directory: directory,
+      parents: parents.reverse(), // Reverse the list for easy iteration in view
     });
   } else {
     res.render("index");
