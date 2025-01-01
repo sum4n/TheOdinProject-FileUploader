@@ -206,6 +206,20 @@ app.get("/:directoryId", async (req, res) => {
   }
 });
 
+// Display file information route
+app.get("/file/:fileId", async (req, res) => {
+  const file = await prisma.file.findUnique({
+    where: {
+      id: parseInt(req.params.fileId),
+      ownerId: req.user.id,
+    },
+  });
+
+  res.render("file-info", {
+    file,
+  });
+});
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => console.log(`App is listening on port: ${PORT}`));
