@@ -21,7 +21,7 @@
 
     <p>
       Files: <% locals.directory.files.forEach((file) => { %>
-      <a href="<%= file.path %>"><%= file.name %></a> <% }) %>
+      <a href="/file/<%= file.id %>"><%= file.name %></a> <% }) %>
     </p>
 
     <p>
