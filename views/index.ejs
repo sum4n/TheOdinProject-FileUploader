@@ -8,9 +8,17 @@
   <body>
     <% if (locals.currentUser) {%>
     <h1><%= currentUser.username %></h1>
-    <h2>
-      <a href="<%= locals.directory.id %>"><%= locals.directory.name %></a>
-    </h2>
+
+    <!-- Folder link bread crumbs -->
+    <div>
+      <h2>
+        <% if (locals.parents !== null) {%> <% parents.forEach((parent) => { %>
+        <a href="<%= parent.id %>"><%= parent.name %> ></a>
+        <% }) %> <% } %>
+        <a href="<%= locals.directory.id %>"><%= locals.directory.name %> :</a>
+      </h2>
+    </div>
+
     <p>
       Files: <% locals.directory.files.forEach((file) => { %>
       <a href="<%= file.path %>"><%= file.name %></a> <% }) %>
