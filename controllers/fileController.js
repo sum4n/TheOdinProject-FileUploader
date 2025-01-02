@@ -18,7 +18,8 @@ module.exports.createFile = async (req, res, next) => {
       ownerId: req.user.id,
     },
   });
-  res.redirect("/");
+  // res.redirect(`/directory/${parseInt(req.params.directoryId)}`);
+  res.redirect(req.get("referer"));
 };
 
 module.exports.getFileInfo = async (req, res) => {

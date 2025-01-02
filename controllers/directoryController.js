@@ -10,7 +10,8 @@ module.exports.createDirectory = async (req, res) => {
     },
   });
 
-  res.redirect("/");
+  // res.redirect(`/directory/${parseInt(req.params.parentDirectoryId)}`);
+  res.redirect(req.get("referer"));
 };
 
 module.exports.getDirectory = async (req, res) => {
