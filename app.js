@@ -42,34 +42,8 @@ app.use("/", indexRouter);
 const userRouter = require("./routes/user");
 app.use("/user", userRouter);
 
-app.get("/upload-file", (req, res) => {
-  if (req.isAuthenticated()) {
-    res.render("upload-file-form");
-  } else {
-    res.render("sign-up-form");
-  }
-});
-
-app.post(
-  "/upload-file/:directoryId",
-  upload.single("uploaded-file"),
-  async (req, res, next) => {
-    // console.table(req.file);
-    // console.log(req.params);
-
-    await prisma.file.create({
-      data: {
-        name: req.file.originalname,
-        size: req.file.size.toString(),
-        type: req.file.mimetype,
-        path: "./uploads/" + req.file.originalname,
-        directoryId: parseInt(req.params.directoryId),
-        ownerId: req.user.id,
-      },
-    });
-    res.redirect("/");
-  }
-);
+const fileRouter = require("./routes/file");
+app.use("/file", fileRouter);
 
 // Create folder
 app.post("/create-folder/:parentDirectoryId", async (req, res) => {
