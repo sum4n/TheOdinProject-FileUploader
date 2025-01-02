@@ -38,4 +38,18 @@ router.post(
   }
 );
 
+// Display file information route
+router.get("/:fileId", async (req, res) => {
+  const file = await prisma.file.findUnique({
+    where: {
+      id: parseInt(req.params.fileId),
+      ownerId: req.user.id,
+    },
+  });
+
+  res.render("file-info", {
+    file,
+  });
+});
+
 module.exports = router;
