@@ -15,7 +15,9 @@
         <% if (locals.parents !== null) {%> <% parents.forEach((parent) => { %>
         <a href="<%= parent.id %>"><%= parent.name %> ></a>
         <% }) %> <% } %>
-        <a href="<%= locals.directory.id %>"><%= locals.directory.name %> :</a>
+        <a href="/directory/<%= locals.directory.id %>"
+          ><%= locals.directory.name %> :</a
+        >
       </h2>
     </div>
 
@@ -26,7 +28,7 @@
 
     <p>
       Directories: <% locals.directory.subDirectories.forEach((dir) => { %>
-      <a href="<%= dir.id %>"><%= dir.name %></a> <% }) %>
+      <a href="/directory/<%= dir.id %>"><%= dir.name %></a> <% }) %>
     </p>
     <!-- <a href="/upload-file">Upload a file</a> -->
     <div>
@@ -42,7 +44,7 @@
     </div>
 
     <div>
-      <form action="/create-folder/<%= locals.directory.id %>" method="POST">
+      <form action="/directory/create/<%= locals.directory.id %>" method="POST">
         <label for="newFolder">New folder:</label>
         <input type="text" name="newFolder" id="newFolder" required />
         <button>Create</button>

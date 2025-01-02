@@ -14,7 +14,7 @@
     <p>Create: <%= file.createdAt %></p>
 
     <!-- File operations -->
-    <form action="/<%= file.directoryId %>" method="GET">
+    <form action="/directory/<%= file.directoryId %>" method="GET">
       <button>Back</button>
     </form>
     <% } else { %>
