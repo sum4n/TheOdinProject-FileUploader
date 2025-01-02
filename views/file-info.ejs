@@ -13,10 +13,8 @@
     <p>Path: <%= file.path %></p>
     <p>Create: <%= file.createdAt %></p>
 
-    <!-- File operations -->
-    <form action="/directory/<%= file.directoryId %>" method="GET">
-      <button>Back</button>
-    </form>
+    <!-- File operations. Always use achor tag for navigation.-->
+    <a href="/directory/<%= file.directoryId %>">Back</a>
     <% } else { %>
     <p>No file found.</p>
     <!-- Go to root directory on invalid file id -->
