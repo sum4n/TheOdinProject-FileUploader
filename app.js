@@ -67,46 +67,9 @@ app.get("/", async (req, res) => {
   }
 });
 
-app.get("/sign-up", (req, res) => res.render("sign-up-form"));
-
-app.post("/sign-up", async (req, res, next) => {
-  try {
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-
-    // Create user in the database
-    await prisma.user.create({
-      data: {
-        username: req.body.username,
-        password: hashedPassword,
-        email: req.body.email,
-        directories: {
-          create: { name: `${req.body.username}'s Drive` },
-        },
-      },
-    });
-    res.redirect("/");
-  } catch (err) {
-    return next(err);
-  }
-});
-
-app.post(
-  "/log-in",
-  passport.authenticate("local", {
-    successRedirect: "/",
-    failureRedirect: "/",
-  })
-);
-
-app.get("/log-out", (req, res) => {
-  req.logout((err) => {
-    if (err) {
-      return next(err);
-    }
-    res.redirect("/");
-  });
-});
+// Import and use routes.
+const userRouter = require("./routes/user");
+app.use("/user", userRouter);
 
 app.get("/upload-file", (req, res) => {
   if (req.isAuthenticated()) {
