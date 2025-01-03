@@ -34,3 +34,15 @@ module.exports.getFileInfo = async (req, res) => {
     file,
   });
 };
+
+module.exports.deleteFile = async (req, res) => {
+  const file = await prisma.file.delete({
+    where: {
+      id: parseInt(req.params.fileId),
+      ownerId: req.user.id,
+    },
+  });
+
+  // res.send(JSON.stringify(file.directoryId));
+  res.redirect(`/directory/${file.directoryId}`);
+};
