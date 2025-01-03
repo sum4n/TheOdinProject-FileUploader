@@ -50,6 +50,11 @@
         <button>Create</button>
       </form>
     </div>
+    <div>
+      <form action="/directory/delete/<%= locals.directory.id %>" method="post">
+        <button>DELETE DIRECTORY!</button>
+      </form>
+    </div>
 
     <% if (locals.message) {%>
     <p><%= locals.message %></p>
