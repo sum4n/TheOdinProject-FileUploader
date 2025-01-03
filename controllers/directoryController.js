@@ -68,3 +68,44 @@ module.exports.getDirectory = async (req, res) => {
     res.render("index");
   }
 };
+
+module.exports.deleteDirectory = async (req, res) => {
+  // console.log(req.params);
+  const directory = await prisma.directory.findUnique({
+    where: {
+      id: parseInt(req.params.directoryId),
+      // parentDirectoryId: {
+      //   not: null,
+      // },
+    },
+    include: {
+      files: true,
+      subDirectories: true,
+    },
+  });
+
+  // console.log(directory);
+  // res.send(directory);
+
+  if (directory === null) {
+    res.send("Directory does not exist.");
+    // res.redirect(`/directory/${directory.parentDirectoryId}`);
+  } else if (directory.parentDirectoryId === null) {
+    res.send("Can not delete root directory.");
+  } else {
+    if (directory.files.length > 0 || directory.subDirectories.length > 0) {
+      res.send(
+        "Directory has files or sub-directories. Please delete them first before deleting this directory"
+      );
+    } else {
+      // Delete the directory.
+      await prisma.directory.delete({
+        where: {
+          id: parseInt(req.params.directoryId),
+        },
+      });
+
+      res.redirect(`/directory/${directory.parentDirectoryId}`);
+    }
+  }
+};
