@@ -9,4 +9,7 @@ router.post("/create/:parentDirectoryId", directoryController.createDirectory);
 // Get directory
 router.get("/:directoryId", directoryController.getDirectory);
 
+// Delete directory
+router.post("/delete/:directoryId", directoryController.deleteDirectory);
+
 module.exports = router;
