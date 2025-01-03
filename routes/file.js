@@ -25,4 +25,7 @@ router.post(
 // Display file information route
 router.get("/:fileId", fileController.getFileInfo);
 
+// Delete file
+router.post("/:fileId", fileController.deleteFile);
+
 module.exports = router;
