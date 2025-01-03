@@ -15,6 +15,9 @@
 
     <!-- File operations. Always use achor tag for navigation.-->
     <a href="/directory/<%= file.directoryId %>">Back</a>
+    <form action="/file/<%= file.id %>" method="post">
+      <button>Delete</button>
+    </form>
     <% } else { %>
     <p>No file found.</p>
     <!-- Go to root directory on invalid file id -->
