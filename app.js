@@ -40,6 +40,13 @@ app.use("/file", fileRouter);
 const directoryRouter = require("./routes/directory");
 app.use("/directory", directoryRouter);
 
+// Error middleware.
+app.use((err, req, res, next) => {
+  console.error(err);
+  // err.statusCode or internal server error.
+  res.status(err.statusCode || 500).send(err.message);
+});
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => console.log(`App is listening on port: ${PORT}`));
