@@ -1,6 +1,9 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
+const asyncHandler = require("express-async-handler");
+const CustomNotFoundError = require("../errors/CustomNotFoundError");
+
 module.exports.createDirectory = async (req, res) => {
   await prisma.directory.create({
     data: {
@@ -14,7 +17,7 @@ module.exports.createDirectory = async (req, res) => {
   res.redirect(req.get("referer"));
 };
 
-module.exports.getDirectory = async (req, res) => {
+module.exports.getDirectory = asyncHandler(async (req, res) => {
   if (req.isAuthenticated()) {
     const user = await prisma.user.findUnique({
       where: {
@@ -34,6 +37,14 @@ module.exports.getDirectory = async (req, res) => {
         parentDirectory: true,
       },
     });
+
+    // Handling errors.
+    if (!directory) {
+      // res.status(404).send("Directory not found!");
+      // return;
+      throw new CustomNotFoundError("Directory not found.");
+    }
+
     // console.log({ directory });
 
     // Send parents' list of the directory to the view to render
@@ -67,7 +78,7 @@ module.exports.getDirectory = async (req, res) => {
   } else {
     res.render("index");
   }
-};
+});
 
 module.exports.deleteDirectory = async (req, res) => {
   // console.log(req.params);
