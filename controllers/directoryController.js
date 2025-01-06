@@ -5,7 +5,7 @@ const asyncHandler = require("express-async-handler");
 const CustomNotFoundError = require("../errors/CustomNotFoundError");
 const ConflictRequestError = require("../errors/ConflictRequestError");
 
-module.exports.createDirectory = async (req, res) => {
+module.exports.createDirectory = asyncHandler(async (req, res) => {
   await prisma.directory.create({
     data: {
       name: req.body.newFolder,
@@ -16,7 +16,7 @@ module.exports.createDirectory = async (req, res) => {
 
   // res.redirect(`/directory/${parseInt(req.params.parentDirectoryId)}`);
   res.redirect(req.get("referer"));
-};
+});
 
 module.exports.getDirectory = asyncHandler(async (req, res) => {
   if (req.isAuthenticated()) {
