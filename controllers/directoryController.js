@@ -3,6 +3,7 @@ const prisma = new PrismaClient();
 
 const asyncHandler = require("express-async-handler");
 const CustomNotFoundError = require("../errors/CustomNotFoundError");
+const ConflictRequestError = require("../errors/ConflictRequestError");
 
 module.exports.createDirectory = async (req, res) => {
   await prisma.directory.create({
@@ -40,12 +41,8 @@ module.exports.getDirectory = asyncHandler(async (req, res) => {
 
     // Handling errors.
     if (!directory) {
-      // res.status(404).send("Directory not found!");
-      // return;
       throw new CustomNotFoundError("Directory not found.");
     }
-
-    // console.log({ directory });
 
     // Send parents' list of the directory to the view to render
     // link bread crumbs.
@@ -54,8 +51,7 @@ module.exports.getDirectory = asyncHandler(async (req, res) => {
 
     while (tempDir.parentDirectory !== null) {
       parents.push(tempDir.parentDirectory);
-      // console.log("---in while-------");
-      // console.log({ parents });
+
       tempDir = await prisma.directory.findUnique({
         where: {
           id: parseInt(tempDir.parentDirectoryId),
@@ -64,11 +60,7 @@ module.exports.getDirectory = asyncHandler(async (req, res) => {
           parentDirectory: true,
         },
       });
-      // console.log("---in while-------");
-      // console.log({ tempDir });
     }
-    // console.log("----------");
-    // console.log(parents);
 
     res.render("index", {
       currentUser: user,
@@ -80,11 +72,12 @@ module.exports.getDirectory = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports.deleteDirectory = async (req, res) => {
+module.exports.deleteDirectory = asyncHandler(async (req, res) => {
   // console.log(req.params);
   const directory = await prisma.directory.findUnique({
     where: {
       id: parseInt(req.params.directoryId),
+      ownerId: parseInt(req.user.id), // can only delete self directories
       // parentDirectoryId: {
       //   not: null,
       // },
@@ -95,28 +88,24 @@ module.exports.deleteDirectory = async (req, res) => {
     },
   });
 
-  // console.log(directory);
-  // res.send(directory);
-
-  if (directory === null) {
-    res.send("Directory does not exist.");
-    // res.redirect(`/directory/${directory.parentDirectoryId}`);
+  if (!directory) {
+    throw new CustomNotFoundError("Directory not found");
   } else if (directory.parentDirectoryId === null) {
-    res.send("Can not delete root directory.");
+    throw new ConflictRequestError("Can not delete the root dirctory");
+  } else if (
+    directory.files.length > 0 ||
+    directory.subDirectories.length > 0
+  ) {
+    throw new ConflictRequestError("Directory has files or sub-folders.");
   } else {
-    if (directory.files.length > 0 || directory.subDirectories.length > 0) {
-      res.send(
-        "Directory has files or sub-directories. Please delete them first before deleting this directory"
-      );
-    } else {
-      // Delete the directory.
-      await prisma.directory.delete({
-        where: {
-          id: parseInt(req.params.directoryId),
-        },
-      });
+    // Delete the directory.
+    await prisma.directory.delete({
+      where: {
+        id: parseInt(req.params.directoryId),
+        ownerId: parseInt(req.user.id),
+      },
+    });
 
-      res.redirect(`/directory/${directory.parentDirectoryId}`);
-    }
+    res.redirect(`/directory/${directory.parentDirectoryId}`);
   }
-};
+});
