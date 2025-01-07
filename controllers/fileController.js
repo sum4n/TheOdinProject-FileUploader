@@ -33,6 +33,10 @@ module.exports.getFileInfo = asyncHandler(async (req, res) => {
     },
   });
 
+  if (!file) {
+    throw new CustomNotFoundError("File does not exists!");
+  }
+
   res.render("file-info", {
     file,
   });
