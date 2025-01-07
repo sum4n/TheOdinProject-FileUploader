@@ -34,7 +34,7 @@ module.exports.getFileInfo = asyncHandler(async (req, res) => {
   });
 
   if (!file) {
-    throw new CustomNotFoundError("File does not exists!");
+    throw new CustomNotFoundError("File does not exist");
   }
 
   res.render("file-info", {
@@ -43,12 +43,23 @@ module.exports.getFileInfo = asyncHandler(async (req, res) => {
 });
 
 module.exports.deleteFile = asyncHandler(async (req, res) => {
-  const file = await prisma.file.delete({
+  const file = await prisma.file.findUnique({
     where: {
       id: parseInt(req.params.fileId),
       ownerId: req.user.id,
     },
   });
+
+  if (!file) {
+    throw new CustomNotFoundError("File does not exist");
+  } else {
+    await prisma.file.delete({
+      where: {
+        id: parseInt(req.params.fileId),
+        ownerId: req.user.id,
+      },
+    });
+  }
 
   // res.send(JSON.stringify(file.directoryId));
   res.redirect(`/directory/${file.directoryId}`);
