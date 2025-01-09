@@ -14,7 +14,7 @@ const validateUserSignUp = [
     .trim()
     .isAlpha()
     .withMessage(`Username ${alphaErr}`)
-    .isLength({ min: 1, max: 10 })
+    .isLength({ min: 3, max: 10 })
     .withMessage(`Username ${lengthErr}`)
     .escape(),
   body("email")
@@ -30,6 +30,25 @@ const validateUserSignUp = [
     .withMessage("Password is required")
     .isLength({ min: 4, max: 10 })
     .withMessage("Password must be between 4 and 10 characters.")
+    .not()
+    .matches(/\s/)
+    .withMessage("Password must not contain spaces."),
+];
+
+const validateLogIn = [
+  body("username")
+    .trim()
+    .notEmpty()
+    .withMessage("Username is required.")
+    .isLength({ min: 3 })
+    .withMessage("Username must be at least 3 characters long.")
+    .escape(),
+  body("password")
+    .trim()
+    .notEmpty()
+    .withMessage("Password is required")
+    .isLength({ min: 4 })
+    .withMessage("Password must be at least 4 characters long.")
     .not()
     .matches(/\s/)
     .withMessage("Password must not contain spaces."),
@@ -79,12 +98,25 @@ module.exports.postSignUp = [
   }),
 ];
 
-module.exports.postLogIn = (req, res, next) => {
-  passport.authenticate("local", {
-    successRedirect: "/",
-    failureRedirect: "/",
-  })(req, res, next);
-};
+module.exports.postLogIn = [
+  validateLogIn,
+  asyncHandler((req, res, next) => {
+    // Extract validation errors from request.
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).render("index", {
+        username: req.body.username,
+        errors: errors.array(),
+      });
+    }
+
+    passport.authenticate("local", {
+      successRedirect: "/",
+      failureRedirect: "/",
+    })(req, res, next);
+  }),
+];
 
 module.exports.getLogOut = (req, res) => {
   req.logout((err) => {
