@@ -67,11 +67,27 @@
     <h2>Please log in</h2>
     <form action="/user/log-in" method="POST">
       <label for="username">Username</label>
-      <input type="text" id="username" name="username" placeholder="username" />
+      <input
+        type="text"
+        id="username"
+        name="username"
+        placeholder="username"
+        value="<%= typeof username !== 'undefined' ? username : '' %>"
+      />
       <label for="password">Password</label>
       <input type="password" id="password" name="password" />
       <button>Log In</button>
     </form>
+
+    <div>
+      <% if (locals.errors) {%>
+      <ul>
+        <% locals.errors.forEach((error) => {%>
+        <li><%= error.msg %></li>
+        <% }) %>
+      </ul>
+      <% } %>
+    </div>
 
     <p>New user? <a href="/user/sign-up">Sign up</a></p>
 
