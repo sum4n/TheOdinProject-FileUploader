@@ -28,8 +28,8 @@ const validateUserSignUp = [
     .trim()
     .notEmpty()
     .withMessage("Password is required")
-    .isLength({ min: 4, max: 10 })
-    .withMessage("Password must be between 4 and 10 characters.")
+    .isLength({ min: 3, max: 10 })
+    .withMessage("Password must be between 3 and 10 characters.")
     .not()
     .matches(/\s/)
     .withMessage("Password must not contain spaces."),
@@ -47,8 +47,8 @@ const validateLogIn = [
     .trim()
     .notEmpty()
     .withMessage("Password is required")
-    .isLength({ min: 4 })
-    .withMessage("Password must be at least 4 characters long.")
+    .isLength({ min: 3 })
+    .withMessage("Password must be at least 3 characters long.")
     .not()
     .matches(/\s/)
     .withMessage("Password must not contain spaces."),
