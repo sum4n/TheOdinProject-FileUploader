@@ -5,18 +5,40 @@ const asyncHandler = require("express-async-handler");
 const CustomNotFoundError = require("../errors/CustomNotFoundError");
 const ConflictRequestError = require("../errors/ConflictRequestError");
 
-module.exports.createDirectory = asyncHandler(async (req, res) => {
-  await prisma.directory.create({
-    data: {
-      name: req.body.newFolder,
-      ownerId: req.user.id,
-      parentDirectoryId: parseInt(req.params.parentDirectoryId),
-    },
-  });
+const { body, validationResult } = require("express-validator");
 
-  // res.redirect(`/directory/${parseInt(req.params.parentDirectoryId)}`);
-  res.redirect(req.get("referer"));
-});
+const validateDirectoryNameInput = [
+  body("newFolder")
+    .trim()
+    .notEmpty()
+    .withMessage("Directory/Folder name is required.")
+    .isLength({ min: 3, max: 10 })
+    .withMessage("Directory/Folder name must be between 3 and 10 characters.")
+    .escape(),
+];
+
+module.exports.createDirectory = [
+  validateDirectoryNameInput,
+  asyncHandler(async (req, res) => {
+    // Extract validation errors from the request.
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).redirect(req.get("referer"));
+    }
+
+    await prisma.directory.create({
+      data: {
+        name: req.body.newFolder,
+        ownerId: req.user.id,
+        parentDirectoryId: parseInt(req.params.parentDirectoryId),
+      },
+    });
+
+    // res.redirect(`/directory/${parseInt(req.params.parentDirectoryId)}`);
+    res.redirect(req.get("referer"));
+  }),
+];
 
 module.exports.getDirectory = asyncHandler(async (req, res) => {
   if (req.isAuthenticated()) {
