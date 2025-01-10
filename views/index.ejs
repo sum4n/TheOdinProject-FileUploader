@@ -46,7 +46,14 @@
     <div>
       <form action="/directory/create/<%= locals.directory.id %>" method="POST">
         <label for="newFolder">New folder:</label>
-        <input type="text" name="newFolder" id="newFolder" required />
+        <input
+          type="text"
+          name="newFolder"
+          id="newFolder"
+          required
+          minlength="3"
+          maxlength="10"
+        />
         <button>Create</button>
       </form>
     </div>
