@@ -10,6 +10,9 @@ const CustomNotFoundError = require("../errors/CustomNotFoundError");
 module.exports.createFile = asyncHandler(async (req, res, next) => {
   // console.table(req.file);
   // console.log(req.params);
+  if (!req.file) {
+    throw new Error("No file selected.");
+  }
 
   await prisma.file.create({
     data: {
