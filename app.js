@@ -44,7 +44,8 @@ app.use("/directory", directoryRouter);
 app.use((err, req, res, next) => {
   console.error(err);
   // err.statusCode or internal server error.
-  res.status(err.statusCode || 500).send(err.message);
+  // res.status(err.statusCode || 500).send(err.message);
+  res.status(err.statusCode || 500).render("errors", { err });
 });
 
 const PORT = process.env.PORT || 3000;
