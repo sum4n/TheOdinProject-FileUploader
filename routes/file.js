@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 // Multer
-const upload = require("../config/multer");
+const { uploadSingleFile } = require("../config/multer");
 
 // Get upload file form
 // router.get("/upload-file", (req, res) => {
@@ -18,7 +18,7 @@ const fileController = require("../controllers/fileController");
 // Post upload file form.
 router.post(
   "/upload-file/:directoryId",
-  upload.single("uploaded-file"),
+  uploadSingleFile,
   fileController.createFile
 );
 
