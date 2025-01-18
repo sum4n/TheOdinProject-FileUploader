@@ -18,6 +18,11 @@
     <form action="/file/<%= file.id %>" method="post">
       <button>Delete</button>
     </form>
+    <div>
+      <form action="/file/download/<%= file.id %>" method="get">
+        <button type="submit">Download</button>
+      </form>
+    </div>
     <% } else { %>
     <p>No file found.</p>
     <!-- Go to root directory on invalid file id -->
