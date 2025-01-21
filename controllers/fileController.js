@@ -13,16 +13,39 @@ module.exports.createFile = asyncHandler(async (req, res, next) => {
     throw new Error("No file selected.");
   }
 
-  await prisma.file.create({
-    data: {
-      name: req.file.originalname,
-      size: req.file.size.toString(),
-      type: req.file.mimetype,
-      path: "./uploads/" + req.file.originalname,
-      directoryId: parseInt(req.params.directoryId),
-      ownerId: req.user.id,
+  const fileWithSameName = await prisma.file.findFirst({
+    where: {
+      name: req.file.filename,
     },
   });
+
+  if (fileWithSameName) {
+    await prisma.file.update({
+      where: {
+        id: fileWithSameName.id,
+      },
+      data: {
+        name: req.file.originalname,
+        size: req.file.size.toString(),
+        type: req.file.mimetype,
+        path: "./uploads/" + req.file.originalname,
+        directoryId: parseInt(req.params.directoryId),
+        ownerId: req.user.id,
+      },
+    });
+  } else {
+    await prisma.file.create({
+      data: {
+        name: req.file.originalname,
+        size: req.file.size.toString(),
+        type: req.file.mimetype,
+        path: "./uploads/" + req.file.originalname,
+        directoryId: parseInt(req.params.directoryId),
+        ownerId: req.user.id,
+      },
+    });
+  }
+
   // res.redirect(`/directory/${parseInt(req.params.directoryId)}`);
   res.redirect(req.get("referer"));
 });
