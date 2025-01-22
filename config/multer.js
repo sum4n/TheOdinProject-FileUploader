@@ -1,8 +1,21 @@
 const multer = require("multer");
+const fs = require("node:fs");
+const path = require("node:path");
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/"); // Destination folder
+  destination: async function (req, file, cb) {
+    // Dynamic directory for uploads.
+    const uploadPath = path.join(
+      __dirname,
+      "../uploads",
+      `${req.user.username}/${req.params.directoryId}`
+    );
+    // console.log(uploadPath);
+
+    // Create the directory if it does not exist
+    fs.mkdirSync(uploadPath, { recursive: true });
+
+    cb(null, uploadPath); // Destination folder
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname); // Keep original name.
