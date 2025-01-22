@@ -28,7 +28,7 @@ module.exports.createFile = asyncHandler(async (req, res, next) => {
         name: req.file.originalname,
         size: req.file.size.toString(),
         type: req.file.mimetype,
-        path: "./uploads/" + req.file.originalname,
+        path: `/${req.user.username}/${req.params.directoryId}/${req.file.originalname}`,
         directoryId: parseInt(req.params.directoryId),
         ownerId: req.user.id,
       },
@@ -39,7 +39,7 @@ module.exports.createFile = asyncHandler(async (req, res, next) => {
         name: req.file.originalname,
         size: req.file.size.toString(),
         type: req.file.mimetype,
-        path: "./uploads/" + req.file.originalname,
+        path: `/${req.user.username}/${req.params.directoryId}/${req.file.originalname}`,
         directoryId: parseInt(req.params.directoryId),
         ownerId: req.user.id,
       },
@@ -102,13 +102,12 @@ module.exports.downloadFile = asyncHandler(async (req, res) => {
     throw new CustomNotFoundError("File does not exist");
   }
 
-  const fileName = file.name;
   const directoryPath = path.join(__dirname, "../uploads");
-  const filePath = `${directoryPath}/${fileName}`;
+  const filePath = `${directoryPath}${file.path}`;
 
   // handling errors
   if (fs.existsSync(filePath)) {
-    res.download(filePath, fileName, (err) => {
+    res.download(filePath, file.name, (err) => {
       if (err) {
         console.error(`Error downloading the file: ${err.message}`);
         res.status(500).send("Could not download the file.");
