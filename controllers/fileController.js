@@ -6,16 +6,35 @@ const fs = require("fs");
 const asyncHandler = require("express-async-handler");
 const CustomNotFoundError = require("../errors/CustomNotFoundError");
 
+const supabase = require("../config/supabaseClient");
+
 module.exports.createFile = asyncHandler(async (req, res, next) => {
-  // console.table(req.file);
+  // console.log(req.file);
   // console.log(req.params);
+  if (!req.user) {
+    throw new Error("Unauthorized.");
+  }
   if (!req.file) {
     throw new Error("No file selected.");
   }
 
+  // Upload file to Supabase
+  const { data, error } = await supabase.storage
+    .from("FileUploader")
+    .upload(
+      `uploads/${req.user.username}/${req.params.directoryId}/${req.file.originalname}`,
+      req.file.buffer,
+      {
+        contentType: req.file.mimetype,
+        upsert: true,
+      }
+    );
+
+  if (error) throw error;
+
   const fileWithSameName = await prisma.file.findFirst({
     where: {
-      name: req.file.filename,
+      name: req.file.originalname,
     },
   });
 
@@ -28,7 +47,8 @@ module.exports.createFile = asyncHandler(async (req, res, next) => {
         name: req.file.originalname,
         size: req.file.size.toString(),
         type: req.file.mimetype,
-        path: `/${req.user.username}/${req.params.directoryId}/${req.file.originalname}`,
+        // path: `/${req.user.username}/${req.params.directoryId}/${req.file.originalname}`,
+        path: data.path,
         directoryId: parseInt(req.params.directoryId),
         ownerId: req.user.id,
       },
@@ -39,7 +59,8 @@ module.exports.createFile = asyncHandler(async (req, res, next) => {
         name: req.file.originalname,
         size: req.file.size.toString(),
         type: req.file.mimetype,
-        path: `/${req.user.username}/${req.params.directoryId}/${req.file.originalname}`,
+        // path: `/${req.user.username}/${req.params.directoryId}/${req.file.originalname}`,
+        path: data.path,
         directoryId: parseInt(req.params.directoryId),
         ownerId: req.user.id,
       },
