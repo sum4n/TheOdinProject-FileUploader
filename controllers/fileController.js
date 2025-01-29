@@ -99,6 +99,11 @@ module.exports.deleteFile = asyncHandler(async (req, res) => {
   if (!file) {
     throw new CustomNotFoundError("File does not exist");
   } else {
+    // Delete file from supabase
+    const { data, error } = await supabase.storage
+      .from("FileUploader")
+      .remove([`${file.path}`]);
+
     await prisma.file.delete({
       where: {
         id: parseInt(req.params.fileId),
