@@ -1,7 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const path = require("node:path");
-const fs = require("fs");
+const { Readable } = require("stream");
 
 const asyncHandler = require("express-async-handler");
 const CustomNotFoundError = require("../errors/CustomNotFoundError");
@@ -128,18 +127,31 @@ module.exports.downloadFile = asyncHandler(async (req, res) => {
     throw new CustomNotFoundError("File does not exist");
   }
 
-  const directoryPath = path.join(__dirname, "../uploads");
-  const filePath = `${directoryPath}${file.path}`;
+  const { data, error } = await supabase.storage
+    .from("FileUploader")
+    .createSignedUrl(file.path, 60);
 
-  // handling errors
-  if (fs.existsSync(filePath)) {
-    res.download(filePath, file.name, (err) => {
-      if (err) {
-        console.error(`Error downloading the file: ${err.message}`);
-        res.status(500).send("Could not download the file.");
-      }
-    });
-  } else {
-    res.status(404).send("File not found");
+  if (error) {
+    return res.status(500).json({ error: "Error generating file URL" });
   }
+
+  // Fetch the file from Supabase Storage
+  const response = await fetch(data.signedUrl);
+
+  if (!response.ok) {
+    return res.status(500).json({ error: "Failed to fetch file" });
+  }
+
+  // Convert response to Buffer
+  const fileBuffer = await response.arrayBuffer();
+
+  // Set response headers for file download
+  res.setHeader(
+    "Content-Disposition",
+    `attachment; filename="${file.path.split("/").pop()}"`
+  );
+  res.setHeader("Content-Type", response.headers.get("content-type"));
+
+  // Stream the file to the response using Readable.from()
+  Readable.from(Buffer.from(fileBuffer)).pipe(res);
 });
