@@ -14,6 +14,6 @@ module.exports.getIndex = asyncHandler(async (req, res) => {
 
     res.redirect(`/directory/${directory.id}`);
   } else {
-    res.render("index");
+    res.redirect("/user/log-in");
   }
 });
