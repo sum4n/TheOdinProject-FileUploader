@@ -55,6 +55,9 @@ const validateLogIn = [
 ];
 
 module.exports.getSignUp = (req, res) => {
+  if (req.isAuthenticated()) {
+    res.send("You are alredy logged in.");
+  }
   const data = {}; // for view
   res.render("sign-up-form", {
     data,
