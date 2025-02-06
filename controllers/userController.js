@@ -98,6 +98,21 @@ module.exports.postSignUp = [
   }),
 ];
 
+module.exports.getLogIn = asyncHandler(async (req, res) => {
+  if (req.isAuthenticated()) {
+    const directory = await prisma.directory.findFirst({
+      where: {
+        ownerId: req.user.id,
+        parentDirectoryId: null,
+      },
+    });
+
+    res.redirect(`/directory/${directory.id}`);
+  } else {
+    res.render("log-in-form");
+  }
+});
+
 module.exports.postLogIn = [
   validateLogIn,
   asyncHandler((req, res, next) => {
@@ -105,7 +120,7 @@ module.exports.postLogIn = [
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      return res.status(400).render("index", {
+      return res.status(400).render("log-in-form", {
         username: req.body.username,
         errors: errors.array(),
       });
@@ -113,7 +128,7 @@ module.exports.postLogIn = [
 
     passport.authenticate("local", {
       successRedirect: "/",
-      failureRedirect: "/",
+      failureRedirect: "/user/log-in",
     })(req, res, next);
   }),
 ];
