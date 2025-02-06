@@ -6,7 +6,7 @@
     <title>File Uploader</title>
   </head>
   <body>
-    <% if (locals.currentUser) {%>
+    <%- include('partials/header') %> <% if (locals.currentUser) {%>
     <h1><%= currentUser.username %></h1>
 
     <!-- Folder link bread crumbs -->
@@ -65,39 +65,6 @@
 
     <% if (locals.message) {%>
     <p><%= locals.message %></p>
-    <% } %>
-    <div>
-      <a href="/user/log-out">LOG OUT</a>
-    </div>
-    <% } else { %>
-    <h1>Welcome to The Odin Project - File Uploader!</h1>
-    <h2>Please log in</h2>
-    <form action="/user/log-in" method="POST">
-      <label for="username">Username</label>
-      <input
-        type="text"
-        id="username"
-        name="username"
-        placeholder="username"
-        value="<%= typeof username !== 'undefined' ? username : '' %>"
-      />
-      <label for="password">Password</label>
-      <input type="password" id="password" name="password" />
-      <button>Log In</button>
-    </form>
-
-    <div>
-      <% if (locals.errors) {%>
-      <ul>
-        <% locals.errors.forEach((error) => {%>
-        <li><%= error.msg %></li>
-        <% }) %>
-      </ul>
-      <% } %>
-    </div>
-
-    <p>New user? <a href="/user/sign-up">Sign up</a></p>
-
-    <% } %>
+    <% } %> <% } %>
   </body>
 </html>
