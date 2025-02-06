@@ -11,6 +11,10 @@ const app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
+// Serve CSS Assets
+const assetsPath = path.join(__dirname, "public");
+app.use(express.static(assetsPath));
+
 // Use session and passport middleware.
 app.use(session);
 app.use(passport.session());
