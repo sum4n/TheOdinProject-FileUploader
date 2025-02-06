@@ -1,0 +1,13 @@
+<header>
+  <h1>The Odin Project: File Uploader</h1>
+  <nav>
+    <ul>
+      <% if (!locals.currentUser) {%>
+      <li><a href="/user/log-in">Log In</a></li>
+      <li><a href="/user/sign-up">Sign Up</a></li>
+      <%} else {%>
+      <li><a href="/user/log-out">Log Out</a></li>
+      <% } %>
+    </ul>
+  </nav>
+</header>
