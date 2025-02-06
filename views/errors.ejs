@@ -1,14 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Error</title>
-  </head>
-  <body>
-    <% if (err) {%>
-    <p><%= err.message %></p>
-    <button onclick="history.back()">Go Back</button>
-    <% } %>
-  </body>
-</html>
+<%- include("partials/head", {title: "Error"}) %>
+<body>
+  <% if (err) {%>
+  <p><%= err.message %></p>
+  <button onclick="history.back()">Go Back</button>
+  <% } %>
+</body>

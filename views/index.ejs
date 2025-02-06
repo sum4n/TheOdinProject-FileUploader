@@ -1,70 +1,63 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>File Uploader</title>
-  </head>
-  <body>
-    <%- include('partials/header') %> <% if (locals.currentUser) {%>
-    <h1><%= currentUser.username %></h1>
+<%- include("partials/head", {title: `${currentUser.username}'s Drive`}) %>
+<body>
+  <%- include('partials/header') %> <% if (locals.currentUser) {%>
+  <h1><%= currentUser.username %></h1>
 
-    <!-- Folder link bread crumbs -->
-    <div>
-      <h2>
-        <% if (locals.parents !== null) {%> <% parents.forEach((parent) => { %>
-        <a href="<%= parent.id %>"><%= parent.name %> ></a>
-        <% }) %> <% } %>
-        <a href="/directory/<%= locals.directory.id %>"
-          ><%= locals.directory.name %> :</a
-        >
-      </h2>
-    </div>
-
-    <p>
-      Files: <% locals.directory.files.forEach((file) => { %>
-      <a href="/file/<%= file.id %>"><%= file.name %></a> <% }) %>
-    </p>
-
-    <p>
-      Directories: <% locals.directory.subDirectories.forEach((dir) => { %>
-      <a href="/directory/<%= dir.id %>"><%= dir.name %></a> <% }) %>
-    </p>
-    <!-- <a href="/upload-file">Upload a file</a> -->
-    <div>
-      <form
-        action="/file/upload-file/<%= locals.directory.id %>"
-        method="POST"
-        enctype="multipart/form-data"
+  <!-- Folder link bread crumbs -->
+  <div>
+    <h2>
+      <% if (locals.parents !== null) {%> <% parents.forEach((parent) => { %>
+      <a href="<%= parent.id %>"><%= parent.name %> ></a>
+      <% }) %> <% } %>
+      <a href="/directory/<%= locals.directory.id %>"
+        ><%= locals.directory.name %> :</a
       >
-        <input type="file" name="uploaded-file" id="uploaded-file" required />
+    </h2>
+  </div>
 
-        <button type="submit">Upload</button>
-      </form>
-    </div>
+  <p>
+    Files: <% locals.directory.files.forEach((file) => { %>
+    <a href="/file/<%= file.id %>"><%= file.name %></a> <% }) %>
+  </p>
 
-    <div>
-      <form action="/directory/create/<%= locals.directory.id %>" method="POST">
-        <label for="newFolder">New folder:</label>
-        <input
-          type="text"
-          name="newFolder"
-          id="newFolder"
-          required
-          minlength="3"
-          maxlength="10"
-        />
-        <button>Create</button>
-      </form>
-    </div>
-    <div>
-      <form action="/directory/delete/<%= locals.directory.id %>" method="post">
-        <button>DELETE DIRECTORY!</button>
-      </form>
-    </div>
+  <p>
+    Directories: <% locals.directory.subDirectories.forEach((dir) => { %>
+    <a href="/directory/<%= dir.id %>"><%= dir.name %></a> <% }) %>
+  </p>
+  <!-- <a href="/upload-file">Upload a file</a> -->
+  <div>
+    <form
+      action="/file/upload-file/<%= locals.directory.id %>"
+      method="POST"
+      enctype="multipart/form-data"
+    >
+      <input type="file" name="uploaded-file" id="uploaded-file" required />
 
-    <% if (locals.message) {%>
-    <p><%= locals.message %></p>
-    <% } %> <% } %>
-  </body>
-</html>
+      <button type="submit">Upload</button>
+    </form>
+  </div>
+
+  <div>
+    <form action="/directory/create/<%= locals.directory.id %>" method="POST">
+      <label for="newFolder">New folder:</label>
+      <input
+        type="text"
+        name="newFolder"
+        id="newFolder"
+        required
+        minlength="3"
+        maxlength="10"
+      />
+      <button>Create</button>
+    </form>
+  </div>
+  <div>
+    <form action="/directory/delete/<%= locals.directory.id %>" method="post">
+      <button>DELETE DIRECTORY!</button>
+    </form>
+  </div>
+
+  <% if (locals.message) {%>
+  <p><%= locals.message %></p>
+  <% } %> <% } %>
+</body>
