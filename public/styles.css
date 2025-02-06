@@ -1,21 +1,58 @@
-body {
-  /* outline: 2px solid black; */
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
   color: white;
-  background-color: darkslategrey;
+  background-color: rgb(30, 30, 30);
 }
 
-a:link {
-  /* text-decoration: none; */
-  color: white;
-}
-
+a:link,
 a:visited {
-  /* text-decoration: none; */
+  text-decoration: none;
   color: white;
 }
 
-a:hover {
-  text-decoration: underline;
-  color: yellow;
-  font-weight: bold;
+nav > ul {
+  /* border: 1px solid white; */
+  display: flex;
+  gap: 30px;
 }
+
+ul {
+  list-style: none;
+}
+
+/* Header */
+header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.402);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 20px;
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+.log-in-link,
+.sign-up-link,
+.log-out-link {
+  border: 1px solid rgba(255, 255, 255, 0.454);
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.log-in-link:hover,
+.sign-up-link:hover {
+  border: 1px solid rgb(55, 199, 235);
+  background-color: rgba(57, 107, 155, 0.653);
+  color: rgb(55, 199, 235);
+}
+
+.log-out-link:hover {
+  border: 1px solid rgba(255, 0, 0, 0.5);
+  background-color: rgba(255, 0, 0, 0.33);
+  color: rgba(255, 0, 0, 0.5);
+}
+/* Header css ends here */
