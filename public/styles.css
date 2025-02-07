@@ -67,7 +67,8 @@ header {
 /* Header css ends here */
 
 /* Log-in and sign-up page style */
-.login-container {
+.login-container,
+.signup-container {
   /* takes remaining height of the body */
   flex-grow: 1;
   display: flex;
@@ -75,7 +76,8 @@ header {
   align-items: center;
 }
 
-.log-in-form {
+.log-in-form,
+.sign-up-form {
   margin: 40px 0px 5px 0px;
   display: flex;
   flex-direction: column;
@@ -112,13 +114,15 @@ button:hover {
   color: rgb(55, 199, 235);
 }
 
-#sign-link {
+#sign-link,
+#login-link {
   margin-left: 10px;
   text-decoration: underline;
   color: rgb(55, 199, 235);
 }
 
-#sign-link:hover {
+#sign-link:hover,
+#login-link:hover {
   color: rgb(161, 233, 250);
 }
 
