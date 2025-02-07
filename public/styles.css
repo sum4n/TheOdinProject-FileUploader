@@ -6,6 +6,16 @@
   background-color: rgb(30, 30, 30);
 }
 
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  /* To make the div below header take full remaining height */
+  display: flex;
+  flex-direction: column;
+}
+
 a:link,
 a:visited {
   text-decoration: none;
@@ -32,7 +42,6 @@ header {
   padding-right: 10px;
   padding-bottom: 20px;
   margin-top: 20px;
-  margin-bottom: 30px;
 }
 
 .log-in-link,
@@ -56,3 +65,68 @@ header {
   color: rgba(255, 0, 0, 0.5);
 }
 /* Header css ends here */
+
+/* Log-in and sign-up page style */
+.login-container {
+  /* takes remaining height of the body */
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.log-in-form {
+  margin: 40px 0px 5px 0px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 400px;
+}
+
+input {
+  height: 40px;
+  padding-left: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.454);
+  border-radius: 4px;
+  outline: none;
+}
+
+input:focus {
+  border: 1px solid rgb(55, 199, 235);
+  box-shadow: 0 0 5px rgb(55, 199, 235);
+}
+
+button {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  height: 40px;
+  width: 100px;
+  border: 1px solid rgba(255, 255, 255, 0.454);
+  padding: 8px;
+  border-radius: 4px;
+}
+
+button:hover {
+  border: 1px solid rgb(55, 199, 235);
+  background-color: rgba(57, 107, 155, 0.653);
+  color: rgb(55, 199, 235);
+}
+
+#sign-link {
+  margin-left: 10px;
+  text-decoration: underline;
+  color: rgb(55, 199, 235);
+}
+
+#sign-link:hover {
+  color: rgb(161, 233, 250);
+}
+
+.error-msgs {
+  margin-top: 30px;
+}
+
+.error-msgs > ul > li {
+  color: red;
+  list-style: disc;
+}

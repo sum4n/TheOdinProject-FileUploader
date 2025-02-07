@@ -1,41 +1,49 @@
 <%- include('partials/head', {title: "Sign-up"}) %>
 <body>
   <%- include('partials/header') %>
-  <h2>Sign Up</h2>
-  <form action="" method="post">
-    <label for="username">Username</label>
-    <input
-      type="text"
-      id="username"
-      name="username"
-      placeholder="username"
-      value="<%= data.username %>"
-    />
-    <label for="email">Email</label>
-    <input
-      type="text"
-      id="email"
-      name="email"
-      placeholder="email@email.com"
-      value="<%= data.email %>"
-    />
-    <label for="password">Password</label>
-    <input
-      type="password"
-      id="password"
-      name="password"
-      value="<%= data.password %>"
-    />
-    <button>Sign Up</button>
-  </form>
+  <div class="signup-container">
+    <div class="sign-up">
+      <h2>Sign Up</h2>
+      <form class="sign-up-form" action="" method="post">
+        <label for="username">Username</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          placeholder="username"
+          value="<%= data.username %>"
+        />
+        <label for="email">Email</label>
+        <input
+          type="text"
+          id="email"
+          name="email"
+          placeholder="email@email.com"
+          value="<%= data.email %>"
+        />
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          value="<%= data.password %>"
+        />
+        <button>Sign Up</button>
+      </form>
+      <p>
+        Already have an account?
+        <a id="login-link" href="/user/log-in">Log in</a>
+      </p>
 
-  <div>
-    <% if (locals.errors) {%>
-    <ul>
-      <% locals.errors.forEach((error) => {%>
-      <li><%= error.msg %></li>
-      <% }) %>
-    </ul>
-    <% } %>
+      <div class="error-msgs">
+        <% if (locals.errors) {%>
+        <ul>
+          <% locals.errors.forEach((error) => {%>
+          <li><%= error.msg %></li>
+          <% }) %>
+        </ul>
+        <% } %>
+      </div>
+    </div>
   </div>
 </body>
