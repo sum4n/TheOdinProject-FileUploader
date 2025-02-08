@@ -2,7 +2,7 @@
   margin: 0px;
   padding: 0px;
   box-sizing: border-box;
-  color: white;
+  color: rgba(255, 255, 255, 0.9);
   background-color: rgb(30, 30, 30);
 }
 
@@ -19,7 +19,7 @@ body {
 a:link,
 a:visited {
   text-decoration: none;
-  color: white;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 nav > ul {
@@ -133,4 +133,64 @@ button:hover {
 .error-msgs > ul > li {
   color: red;
   list-style: disc;
+}
+
+/* Style for index view */
+.index-container {
+  padding-left: 10px;
+  padding-right: 10px;
+  flex-grow: 1;
+  display: flex;
+}
+
+.index-sidebar {
+  padding-top: 20px;
+  width: 300px;
+  border-right: 1px solid rgba(255, 255, 255, 0.454);
+}
+
+/* Styles for index body */
+.index-body {
+  padding-top: 20px;
+  padding-left: 20px;
+  flex-grow: 1;
+}
+
+.item-list {
+  /* border: 1px solid rgba(255, 255, 2155, 0.454); */
+  display: flex;
+  height: 50px;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 10px;
+  padding-left: 10px;
+}
+
+.item-box {
+  border: 1px solid rgba(255, 255, 255, 0.454);
+  border-radius: 4px;
+  align-items: center;
+}
+
+.item-box:hover {
+  border: 1px solid rgb(55, 199, 235);
+  background-color: rgba(57, 107, 155, 0.653);
+  color: rgb(55, 199, 235);
+}
+
+.item-box:hover p {
+  /* Transparent bg color */
+  background-color: transparent;
+  color: rgb(55, 199, 235);
+}
+
+.item-name {
+  width: 400px;
+  flex-grow: 3;
+}
+.item-size,
+.item-created {
+  width: 100px;
+  flex-grow: 1;
 }
