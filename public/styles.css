@@ -179,10 +179,13 @@ button:hover {
   color: rgb(55, 199, 235);
 }
 
-.item-box:hover p {
+.item-box:hover p,
+.item-box:hover svg {
   /* Transparent bg color */
   background-color: transparent;
   color: rgb(55, 199, 235);
+  /* for svg */
+  fill: rgb(55, 199, 235);
 }
 
 .item-name {
