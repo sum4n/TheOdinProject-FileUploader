@@ -191,6 +191,9 @@ button:hover {
 .item-name {
   width: 400px;
   flex-grow: 3;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 .item-size,
 .item-created {
