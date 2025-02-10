@@ -45,6 +45,7 @@
           <button>Create</button>
         </form>
       </div>
+      <% if (locals.parents.length !== 0) {%>
       <div>
         <form
           action="/directory/delete/<%= locals.directory.id %>"
@@ -53,6 +54,7 @@
           <button class="delete-directory-button">DELETE DIRECTORY!</button>
         </form>
       </div>
+      <% } %>
     </div>
 
     <div class="index-body">
