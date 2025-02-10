@@ -80,7 +80,10 @@
           <p class="item-created">Created</p>
         </div>
 
-        <% locals.directory.files.forEach((file) => { %>
+        <% if (locals.directory.files.length === 0 &&
+        locals.directory.subDirectories.length === 0) {%>
+        <p class="no-item-msg">No files or folders to display</p>
+        <% } else {%> <% locals.directory.files.forEach((file) => { %>
         <a href="/file/<%= file.id %>">
           <div class="item-list item-box">
             <p class="item-name">
@@ -122,7 +125,8 @@
             <p class="item-created"><%= dir.createdAt.toDateString() %></p>
           </div>
         </a>
-        <% }) %>
+
+        <% }) %> <% } %>
       </div>
 
       <% if (locals.message) {%>

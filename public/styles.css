@@ -167,6 +167,11 @@ button:hover {
   text-decoration: underline;
 }
 
+.no-item-msg {
+  text-align: center;
+  margin-top: 100px;
+}
+
 .item-box {
   border: 1px solid rgba(255, 255, 255, 0.454);
   border-radius: 4px;
