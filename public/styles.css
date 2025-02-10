@@ -161,6 +161,12 @@ button:hover {
   padding-left: 10px;
 }
 
+.parent-link:visited,
+.parent-link:link {
+  color: rgb(55, 199, 235);
+  text-decoration: underline;
+}
+
 .item-box {
   border: 1px solid rgba(255, 255, 255, 0.454);
   border-radius: 4px;

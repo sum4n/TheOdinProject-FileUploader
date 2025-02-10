@@ -61,7 +61,9 @@
         <h2>
           <% if (locals.parents !== null) {%> <% parents.forEach((parent) => {
           %>
-          <a href="<%= parent.id %>"><%= parent.name %> ></a>
+          <a class="parent-link" href="<%= parent.id %>"
+            ><%= parent.name %> ></a
+          >
           <% }) %> <% } %>
           <a href="/directory/<%= locals.directory.id %>"
             ><%= locals.directory.name %> :</a
