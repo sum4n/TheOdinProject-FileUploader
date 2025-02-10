@@ -143,12 +143,6 @@ button:hover {
   display: flex;
 }
 
-.index-sidebar {
-  padding-top: 20px;
-  width: 300px;
-  border-right: 1px solid rgba(255, 255, 255, 0.454);
-}
-
 /* Styles for index body */
 .index-body {
   padding-top: 20px;
@@ -199,4 +193,37 @@ button:hover {
 .item-created {
   width: 100px;
   flex-grow: 1;
+}
+
+/* Styles for index-sidebar */
+.index-sidebar {
+  padding-top: 20px;
+  width: 300px;
+  border-right: 1px solid rgba(255, 255, 255, 0.454);
+}
+
+.sidebar-file-form,
+.sidebar-folder-form {
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.file-input {
+  border: none;
+  /* margin-top: 10px; */
+  padding: 8px 0 0 0;
+}
+
+.delete-directory-button {
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 0, 0, 0.33);
+}
+
+.delete-directory-button:hover {
+  background-color: rgba(255, 0, 0, 0.33);
+  color: red;
+  border: 1px solid red;
 }

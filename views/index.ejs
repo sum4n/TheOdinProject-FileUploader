@@ -5,15 +5,23 @@
 
   <div class="index-container">
     <div class="index-sidebar">
-      <p>sidebar</p>
       <!-- <a href="/upload-file">Upload a file</a> -->
       <div>
         <form
+          class="sidebar-file-form"
           action="/file/upload-file/<%= locals.directory.id %>"
           method="POST"
           enctype="multipart/form-data"
         >
-          <input type="file" name="uploaded-file" id="uploaded-file" required />
+          <label for="uploaded-file">Upload a file:</label>
+          <p><small>Maximum file size: 100kB</small></p>
+          <input
+            class="file-input"
+            type="file"
+            name="uploaded-file"
+            id="uploaded-file"
+            required
+          />
 
           <button type="submit">Upload</button>
         </form>
@@ -21,10 +29,11 @@
 
       <div>
         <form
+          class="sidebar-folder-form"
           action="/directory/create/<%= locals.directory.id %>"
           method="POST"
         >
-          <label for="newFolder">New folder:</label>
+          <label for="newFolder">Create new folder:</label>
           <input
             type="text"
             name="newFolder"
@@ -41,10 +50,11 @@
           action="/directory/delete/<%= locals.directory.id %>"
           method="post"
         >
-          <button>DELETE DIRECTORY!</button>
+          <button class="delete-directory-button">DELETE DIRECTORY!</button>
         </form>
       </div>
     </div>
+
     <div class="index-body">
       <!-- Folder link bread crumbs -->
       <div>
