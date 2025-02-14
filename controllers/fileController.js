@@ -84,6 +84,7 @@ module.exports.getFileInfo = asyncHandler(async (req, res) => {
 
   res.render("file-info", {
     file,
+    currentUser: req.user,
   });
 });
 
