@@ -1,27 +1,35 @@
 <%- include("partials/head", {title: "File Information"}) %>
 <body>
-  <%- include('partials/header') %> <% if (locals.file) {%>
-  <p>Name: <%= file.name %></p>
-  <p>Type: <%=file.type %></p>
-  <p>Size: <%= file.size %></p>
-  <p>Path: <%= file.path %></p>
-  <p>Create: <%= file.createdAt %></p>
+  <%- include('partials/header') %>
+  <div class="file-info-container">
+    <% if (locals.file) {%>
+    <p><b>File Information:</b></p>
+    <p><b>Name:</b> <%= file.name %></p>
+    <p><b>Type:</b> <%=file.type %></p>
+    <p><b>Size:</b> <%= (file.size / 1000).toFixed(1) %> kB</p>
+    <p><b>Path:</b> <%= file.path %></p>
+    <p><b>Created:</b> <%= file.createdAt.toLocaleString() %></p>
 
-  <!-- File operations. Always use achor tag for navigation.-->
-  <a href="/directory/<%= file.directoryId %>">Back</a>
-  <form action="/file/<%= file.id %>" method="post">
-    <button>Delete</button>
-  </form>
-  <div>
-    <form action="/file/download/<%= file.id %>" method="get">
-      <button type="submit">Download</button>
+    <div class="file-info-navigation">
+      <!-- File operations. Always use achor tag for navigation.-->
+      <a class="info-back-link" href="/directory/<%= file.directoryId %>"
+        >Back</a
+      >
+      <form action="/file/<%= file.id %>" method="post">
+        <button class="file-delete-btn">Delete</button>
+      </form>
+      <div>
+        <form action="/file/download/<%= file.id %>" method="get">
+          <button type="submit">Download</button>
+        </form>
+      </div>
+    </div>
+    <% } else { %>
+    <p>No file found.</p>
+    <!-- Go to root directory on invalid file id -->
+    <form action="/" method="get">
+      <button>Back</button>
     </form>
+    <% } %>
   </div>
-  <% } else { %>
-  <p>No file found.</p>
-  <!-- Go to root directory on invalid file id -->
-  <form action="/" method="get">
-    <button>Back</button>
-  </form>
-  <% } %>
 </body>

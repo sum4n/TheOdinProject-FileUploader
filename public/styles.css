@@ -46,14 +46,20 @@ header {
 
 .log-in-link,
 .sign-up-link,
-.log-out-link {
+.log-out-link,
+.info-back-link {
   border: 1px solid rgba(255, 255, 255, 0.454);
-  padding: 8px;
   border-radius: 4px;
+  height: 40px;
+  width: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .log-in-link:hover,
-.sign-up-link:hover {
+.sign-up-link:hover,
+.info-back-link:hover {
   border: 1px solid rgb(55, 199, 235);
   background-color: rgba(57, 107, 155, 0.653);
   color: rgb(55, 199, 235);
@@ -233,8 +239,25 @@ button:hover {
   background-color: rgba(255, 0, 0, 0.33);
 }
 
-.delete-directory-button:hover {
+.delete-directory-button:hover,
+.file-delete-btn:hover {
   background-color: rgba(255, 0, 0, 0.33);
   color: red;
   border: 1px solid red;
+}
+
+/* Style file-info.ejs */
+.file-info-container {
+  padding-left: 10px;
+}
+
+.file-info-container p {
+  margin-top: 20px;
+}
+
+.file-info-navigation {
+  margin-top: 40px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
 }
