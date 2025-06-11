@@ -37,6 +37,7 @@ passport.use(
 passport.serializeUser((user, done) => {
   done(null, {
     id: user.id,
+    username: user.username,
   });
 });
 
