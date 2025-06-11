@@ -43,10 +43,9 @@ module.exports.createDirectory = [
 ];
 
 module.exports.getDirectory = asyncHandler(async (req, res) => {
-  // console.log({ user: req.user, location: "getDirectory" });
   if (req.isAuthenticated()) {
-    if (!req.user.directories) {
-      req.user.directories = await prisma.directory.findMany({
+    if (!req.session.directories) {
+      req.session.directories = await prisma.directory.findMany({
         where: { ownerId: req.user.id },
         include: {
           files: true,
@@ -56,7 +55,7 @@ module.exports.getDirectory = asyncHandler(async (req, res) => {
       });
     }
 
-    const userDirectories = req.user.directories;
+    const userDirectories = req.session.directories;
 
     let currentDirectory = userDirectories.find((folder) => {
       return folder.id == req.params.directoryId;
@@ -93,19 +92,9 @@ module.exports.getDirectory = asyncHandler(async (req, res) => {
 });
 
 module.exports.deleteDirectory = asyncHandler(async (req, res) => {
-  // console.log(req.params);
-  const directory = await prisma.directory.findUnique({
-    where: {
-      id: parseInt(req.params.directoryId),
-      ownerId: parseInt(req.user.id), // can only delete self directories
-      // parentDirectoryId: {
-      //   not: null,
-      // },
-    },
-    include: {
-      files: true,
-      subDirectories: true,
-    },
+  // get directory from req.session, no database call.
+  const directory = req.session.directories.find((dir) => {
+    return dir.id == req.params.directoryId;
   });
 
   if (!directory) {
@@ -126,6 +115,19 @@ module.exports.deleteDirectory = asyncHandler(async (req, res) => {
       },
     });
 
-    res.redirect(`/directory/${directory.parentDirectoryId}`);
+    // update req.session.directories
+    req.session.directories = await prisma.directory.findMany({
+      where: { ownerId: req.user.id },
+      include: {
+        files: true,
+        subDirectories: true,
+        parentDirectory: true,
+      },
+    });
+
+    // save the updated session
+    req.session.save(() => {
+      res.redirect(`/directory/${directory.parentDirectoryId}`);
+    });
   }
 });
