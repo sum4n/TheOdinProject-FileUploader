@@ -1,5 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  log: ["query", "info", "warn", "error"], // This logs all queries and other messages
+});
 
 const asyncHandler = require("express-async-handler");
 const CustomNotFoundError = require("../errors/CustomNotFoundError");
@@ -41,52 +43,48 @@ module.exports.createDirectory = [
 ];
 
 module.exports.getDirectory = asyncHandler(async (req, res) => {
+  // console.log({ user: req.user, location: "getDirectory" });
   if (req.isAuthenticated()) {
-    const user = await prisma.user.findUnique({
-      where: {
-        username: req.user.username,
-      },
-    });
-    // console.log(user);
-
-    const directory = await prisma.directory.findUnique({
-      where: {
-        ownerId: req.user.id,
-        id: parseInt(req.params.directoryId),
-      },
-      include: {
-        files: true,
-        subDirectories: true,
-        parentDirectory: true,
-      },
-    });
-
-    // Handling errors.
-    if (!directory) {
-      throw new CustomNotFoundError("Directory not found.");
-    }
-
-    // Send parents' list of the directory to the view to render
-    // link bread crumbs.
-    let parents = [];
-    let tempDir = directory;
-
-    while (tempDir.parentDirectory !== null) {
-      parents.push(tempDir.parentDirectory);
-
-      tempDir = await prisma.directory.findUnique({
-        where: {
-          id: parseInt(tempDir.parentDirectoryId),
-        },
+    if (!req.user.directories) {
+      req.user.directories = await prisma.directory.findMany({
+        where: { ownerId: req.user.id },
         include: {
+          files: true,
+          subDirectories: true,
           parentDirectory: true,
         },
       });
     }
 
+    const userDirectories = req.user.directories;
+
+    let currentDirectory = userDirectories.find((folder) => {
+      return folder.id == req.params.directoryId;
+    });
+
+    // Handling errors.
+    if (!currentDirectory) {
+      throw new CustomNotFoundError("Directory not found.");
+    }
+
+    // console.log(currentDirectory);
+
+    // Send parents' list of the directory to the view to render
+    // link bread crumbs.
+    let parents = [];
+    let tempDir = currentDirectory;
+
+    while (tempDir.parentDirectory !== null) {
+      parents.push(tempDir.parentDirectory);
+
+      tempDir = userDirectories.find((folder) => {
+        return folder.id == tempDir.parentDirectoryId;
+      });
+    }
+
     res.render("index", {
-      currentUser: user,
-      directory: directory,
+      currentUser: req.user,
+      directory: currentDirectory,
       parents: parents.reverse(), // Reverse the list for easy iteration in view
     });
   } else {
