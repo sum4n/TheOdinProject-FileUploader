@@ -35,21 +35,13 @@ passport.use(
 
 // Authentication: Sessions and serialization.
 passport.serializeUser((user, done) => {
-  done(null, user.id);
+  done(null, {
+    id: user.id,
+  });
 });
 
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await prisma.user.findUnique({
-      where: {
-        id: id,
-      },
-    });
-    // console.log(user);
-    done(null, user);
-  } catch (err) {
-    done(err);
-  }
+passport.deserializeUser((sessionUser, done) => {
+  done(null, sessionUser);
 });
 
 module.exports = passport;
