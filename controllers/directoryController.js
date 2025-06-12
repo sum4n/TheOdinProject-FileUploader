@@ -1,7 +1,4 @@
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient({
-  log: ["query", "info", "warn", "error"], // This logs all queries and other messages
-});
+const prisma = require("../config/prisma");
 
 const asyncHandler = require("express-async-handler");
 const CustomNotFoundError = require("../errors/CustomNotFoundError");
