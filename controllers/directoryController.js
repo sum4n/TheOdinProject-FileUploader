@@ -107,7 +107,7 @@ module.exports.deleteDirectory = asyncHandler(async (req, res) => {
   ) {
     throw new ConflictRequestError("Directory has files or sub-folders.");
   } else {
-    // Delete the directory.
+    // Delete the directory from database
     await prisma.directory.delete({
       where: {
         id: parseInt(req.params.directoryId),
@@ -115,15 +115,21 @@ module.exports.deleteDirectory = asyncHandler(async (req, res) => {
       },
     });
 
+    // Don't query database for new directory structure.
     // update req.session.directories
-    req.session.directories = await prisma.directory.findMany({
-      where: { ownerId: req.user.id },
-      include: {
-        files: true,
-        subDirectories: true,
-        parentDirectory: true,
-      },
+    // Delete the directory from memory and also the delete is as child directory
+    const parentId = directory.parentDirectory.id;
+
+    req.session.directories = req.session.directories.filter((dir) => {
+      if (dir.id == parentId) {
+        dir.subDirectories = dir.subDirectories.filter((subdir) => {
+          return subdir.id != directory.id;
+        });
+      }
+      return dir.id != directory.id;
     });
+
+    // console.log(req.session.directories);
 
     // save the updated session
     req.session.save(() => {
