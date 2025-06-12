@@ -37,8 +37,10 @@ module.exports.createFile = asyncHandler(async (req, res, next) => {
     },
   });
 
+  let createdFile;
+
   if (fileWithSameName) {
-    await prisma.file.update({
+    createdFile = await prisma.file.update({
       where: {
         id: fileWithSameName.id,
       },
@@ -53,7 +55,7 @@ module.exports.createFile = asyncHandler(async (req, res, next) => {
       },
     });
   } else {
-    await prisma.file.create({
+    createdFile = await prisma.file.create({
       data: {
         name: req.file.originalname,
         size: req.file.size.toString(),
@@ -66,8 +68,24 @@ module.exports.createFile = asyncHandler(async (req, res, next) => {
     });
   }
 
+  // console.log(createdFile);
+
+  // update req.session.directories
+  const dir = req.session.directories.find(
+    (dir) => dir.id == req.params.directoryId
+  );
+  // directly mutates the object inside the array
+  // because dir is reference to the object inside req.session.directories
+  // modifies the session in memory. req.session.save() can be skipped.
+  if (dir) {
+    dir.files.push(createdFile);
+  }
+
   // res.redirect(`/directory/${parseInt(req.params.directoryId)}`);
-  res.redirect(req.get("referer"));
+  // res.redirect(req.get("referer"));
+  req.session.save(() => {
+    res.redirect(req.get("referer"));
+  });
 });
 
 module.exports.getFileInfo = asyncHandler(async (req, res) => {
@@ -111,6 +129,16 @@ module.exports.deleteFile = asyncHandler(async (req, res) => {
       },
     });
   }
+
+  // update req.session.directories
+  req.session.directories = await prisma.directory.findMany({
+    where: { ownerId: req.user.id },
+    include: {
+      files: true,
+      subDirectories: true,
+      parentDirectory: true,
+    },
+  });
 
   // res.send(JSON.stringify(file.directoryId));
   res.redirect(`/directory/${file.directoryId}`);
