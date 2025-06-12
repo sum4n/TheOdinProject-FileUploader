@@ -41,18 +41,8 @@ module.exports.createDirectory = [
 
 module.exports.getDirectory = asyncHandler(async (req, res) => {
   if (req.isAuthenticated()) {
-    const user = await prisma.user.findUnique({
-      where: {
-        username: req.user.username,
-      },
-    });
-    // console.log(user);
-
-    const directory = await prisma.directory.findUnique({
-      where: {
-        ownerId: req.user.id,
-        id: parseInt(req.params.directoryId),
-      },
+    const currentDirectory = await prisma.directory.findUnique({
+      where: { ownerId: req.user.id, id: parseInt(req.params.directoryId) },
       include: {
         files: true,
         subDirectories: true,
@@ -61,32 +51,21 @@ module.exports.getDirectory = asyncHandler(async (req, res) => {
     });
 
     // Handling errors.
-    if (!directory) {
+    if (!currentDirectory) {
       throw new CustomNotFoundError("Directory not found.");
     }
 
     // Send parents' list of the directory to the view to render
     // link bread crumbs.
-    let parents = [];
-    let tempDir = directory;
-
-    while (tempDir.parentDirectory !== null) {
-      parents.push(tempDir.parentDirectory);
-
-      tempDir = await prisma.directory.findUnique({
-        where: {
-          id: parseInt(tempDir.parentDirectoryId),
-        },
-        include: {
-          parentDirectory: true,
-        },
-      });
+    let parent = [];
+    if (currentDirectory.parentDirectory !== null) {
+      parent.push(currentDirectory.parentDirectory);
     }
 
     res.render("index", {
-      currentUser: user,
-      directory: directory,
-      parents: parents.reverse(), // Reverse the list for easy iteration in view
+      currentUser: req.user,
+      directory: currentDirectory,
+      parents: parent,
     });
   } else {
     res.render("index");
