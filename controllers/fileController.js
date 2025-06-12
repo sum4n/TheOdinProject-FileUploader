@@ -130,18 +130,13 @@ module.exports.deleteFile = asyncHandler(async (req, res) => {
     });
   }
 
-  // update req.session.directories
-  req.session.directories = await prisma.directory.findMany({
-    where: { ownerId: req.user.id },
-    include: {
-      files: true,
-      subDirectories: true,
-      parentDirectory: true,
-    },
-  });
+  // // update req.session.directories
+  const dir = req.session.directories.find((dir) => dir.id == file.directoryId);
+  dir.files = dir.files.filter((dirFile) => dirFile.id != file.id);
 
-  // res.send(JSON.stringify(file.directoryId));
-  res.redirect(`/directory/${file.directoryId}`);
+  req.session.save(() => {
+    res.redirect(`/directory/${file.directoryId}`);
+  });
 });
 
 module.exports.downloadFile = asyncHandler(async (req, res) => {
