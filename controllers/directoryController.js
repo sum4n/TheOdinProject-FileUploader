@@ -29,7 +29,7 @@ module.exports.createDirectory = [
       return res.status(400).redirect(req.get("referer"));
     }
 
-    await prisma.directory.create({
+    const createdDirectory = await prisma.directory.create({
       data: {
         name: req.body.newFolder,
         ownerId: req.user.id,
@@ -37,8 +37,27 @@ module.exports.createDirectory = [
       },
     });
 
-    // res.redirect(`/directory/${parseInt(req.params.parentDirectoryId)}`);
-    res.redirect(req.get("referer"));
+    // Add extra properties
+    createdDirectory["files"] = [];
+    createdDirectory["subDirectories"] = [];
+    // Get parent directory
+    let parentDirectory = req.session.directories.find(
+      (dir) => dir.id == req.params.parentDirectoryId
+    );
+    // Set parent directory
+    createdDirectory["parentDirectory"] = { parentDirectory };
+
+    // console.log(createdDirectory);
+
+    // update req.sesson.directories with newly created directory
+    // no database call
+    req.session.directories.push(createdDirectory);
+
+    // console.log(req.session.directories);
+
+    req.session.save(() => {
+      res.redirect(req.get("referer"));
+    });
   }),
 ];
 
